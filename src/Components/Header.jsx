@@ -8,14 +8,23 @@ import shared from "../utils/shared";
 
 import { useAuthContext } from "../context/auth";
 import { useCartContext } from "../context/cart";
+
 const Header = () => {
+  // Hook to navigate to different routes
   const navigate = useNavigate();
+  
+  // Access the authentication context
   const authContext = useAuthContext();
+  
+  // Access the cart context
   const cartContext = useCartContext();
+  
+  // Function to handle user logout
   const logOut = () => {
     authContext.signOut();
   };
-
+  
+  // Compute the filtered items based on user role using useMemo to memoize the result
   const items = useMemo(() => {
     return shared.NavigationItems.filter(
       (item) =>
@@ -23,11 +32,14 @@ const Header = () => {
     );
   }, [authContext.user]);
 
+  // Render the header component
   return (
     <>
       <div className="flex justify-between items-center">
+        {/* Render the logo */}
         <img src={logo} alt="TatvaSoft_Logo" className="h-24 ml-40 w-44" />
         <div className="mr-40  space-x-1 flex">
+          {/* Render login and register buttons if the user is not logged in */}
           {!authContext.user.id && (
             <>
               <Button
@@ -59,6 +71,8 @@ const Header = () => {
               </Button>
             </>
           )}
+          
+          {/* Render navigation buttons based on the user's role */}
           {items.map((item, index) => (
             <>
               <Button
@@ -82,6 +96,8 @@ const Header = () => {
               />
             </>
           ))}
+          
+          {/* Render the shopping cart button */}
           <Button
             variant="outlined"
             sx={{
@@ -106,6 +122,8 @@ const Header = () => {
               cart
             </span>
           </Button>
+          
+          {/* Render the logout button if the user is logged in */}
           {!!authContext.user.id ? (
             <Button
               variant="contained"

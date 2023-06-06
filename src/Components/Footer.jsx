@@ -1,5 +1,5 @@
 import React from "react";
-// import logo from "../assets/logo.jpg";
+
 function Footer() {
   return (
      <div className="flex  py-7 items-center justify-center mt-20">

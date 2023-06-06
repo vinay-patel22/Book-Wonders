@@ -9,20 +9,33 @@ import bookService from "../service/book.service";
 import shared from "../utils/shared";
 
 export default function Searchbar() {
+  // State variables
   const [query, setQuery] = useState("");
   const [bookList, setBookList] = useState([]);
   const [openSearchResult, setOpenSearchResult] = useState(false);
+
+  // Function to search for books
   const searchBook = async () => {
     const res = await bookService.searchBook(query);
     setBookList(res);
   };
+
+  // Function to perform the search
   const search = () => {
     searchBook();
     setOpenSearchResult(true);
   };
+
+  // Hook to navigate to different routes
   const navigate = useNavigate();
+  
+  // Access the authentication context
   const authContext = useAuthContext();
+  
+  // Access the cart context
   const cartContext = useCartContext();
+
+  // Function to add a book to the cart
   const addToCart = (book) => {
     if (!authContext.user.id) {
       navigate("/login");
@@ -43,9 +56,12 @@ export default function Searchbar() {
         });
     }
   };
+
+  // Render the search bar component
   return (
     <div className="flex bg-[#514ef5] h-20 items-center justify-center space-x-3 ">
       <div style={{ position: "relative" }}>
+        {/* Text input for search */}
         <TextField
           hiddenLabel
           label="What are you Looking for..."
@@ -76,6 +92,7 @@ export default function Searchbar() {
               padding: "15px",
             }}
           >
+            {/* Display search results */}
             {bookList?.length === 0 && <p>No Product Found</p>}
             <List>
               {bookList?.length > 0 &&
@@ -88,6 +105,7 @@ export default function Searchbar() {
                       </div>
                       <div className=" text-right ml-4">
                         <p>{item.price}</p>
+                        {/* Button to add book to cart */}
                         <Button
                           sx={{
                             color: "#f14d54",
@@ -106,6 +124,7 @@ export default function Searchbar() {
         )}
       </div>
 
+      {/* Button to initiate the search */}
       <Button
         variant="contained"
         startIcon={<AiOutlineSearch />}
@@ -121,6 +140,8 @@ export default function Searchbar() {
       >
         Search
       </Button>
+
+      {/* Button to cancel the search */}
       <Button
         variant="contained"
         sx={{

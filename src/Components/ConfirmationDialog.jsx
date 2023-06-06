@@ -7,15 +7,24 @@ import {
   DialogTitle,
 } from "@mui/material";
 
+// Define the ConfirmationDialog component
 const ConfirmationDialog = (props) => {
+  // Destructure the props object
   const { open, onClose, onConfirm, title, description } = props;
+  
+  // Render the dialog component
   return (
     <Dialog open={open} onClose={() => onClose()}>
+      {/* Dialog title */}
       <DialogTitle>{title}</DialogTitle>
+      
       <DialogContent>
+        {/* Dialog content text */}
         <DialogContentText>{description}</DialogContentText>
       </DialogContent>
+      
       <DialogActions>
+        {/* Cancel button */}
         <Button
           variant="contained"
           onClick={() => onClose()}
@@ -31,6 +40,8 @@ const ConfirmationDialog = (props) => {
         >
           Cancle
         </Button>
+        
+        {/* Ok button */}
         <Button
           variant="contained"
           onClick={() => onConfirm()}
@@ -51,4 +62,5 @@ const ConfirmationDialog = (props) => {
   );
 };
 
+// Export the ConfirmationDialog component as the default export
 export default ConfirmationDialog;
