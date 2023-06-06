@@ -65,7 +65,7 @@ The Book Store application is built using the following technologies:
 
 🔧 ReactJS: A JavaScript library for building user interfaces.
 🔧 HTML: The markup language used for structuring the application.
-🔧 CSS: The stylesheet language used for styling the application.
+🔧 CSS ( Tailwind CSS ): The stylesheet language used for styling the application.
 🔧 JavaScript: The programming language used for the application's logic.
 
 ## Contributing
