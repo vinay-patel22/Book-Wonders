@@ -1,3 +1,4 @@
+// Import some stuff..
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Footer from "./Components/Footer";
