@@ -9,6 +9,7 @@ import { Button, Typography } from "@mui/material";
 import shared from "../utils/shared";
 import orderService from "../service/order.service";
 import { useAuthContext } from "../context/auth";
+import { FaHome } from 'react-icons/fa';
 
 const Cart = () => {
   const authContext = useAuthContext();
@@ -40,6 +41,7 @@ const Cart = () => {
       if (res) {
         cartContext.updateCart();
       }
+      toast.success("Your item is removed..");
     } catch (error) {
       toast.error("Something went wrong!");
     }
@@ -103,7 +105,8 @@ const Cart = () => {
   };
 
   return (
-    <div className="flex-1 ml-96 mr-96 px-16">
+    <div className="flex-1 ml-96 mr-96 px-16 ">
+     
       <Typography
         variant="h4"
         sx={{
@@ -115,17 +118,24 @@ const Cart = () => {
           color: "#bf0cf0",
         }}
       >
+          <FaHome
+    style={{ marginRight: "10px", cursor: "pointer" }}
+    onClick={() => navigate("/")}
+  />
         Cart Page
       </Typography>
+      
       <div className="flex items-center justify-center m-6">
-      <div className="border-t-2 border-[#0cf099] w-32"></div>
+        <div className="border-t-2 border-[#0cf099] w-32"></div>
       </div>
       <div className="flex font-semibold justify-between">
         <Typography variant="h6">
-         BOOK BAG ({itemsInCart} Items)
+          BOOK BAG ({itemsInCart} Items)
         </Typography>
         <span>Total price: {totalPrice}</span>
       </div>
+
+
       <div className="flex-1 mt-5">
         {cartList.map((cartItem) => {
           return (
@@ -150,6 +160,23 @@ const Cart = () => {
                   <p className="text-[#f14d54] mt-2">Cart item name</p>
 
                   <div className="flex mt-16">
+                  <Button
+                      sx={{
+                        color: "white",
+                        backgroundColor: "#1153fa",
+                        "&:hover": {
+                          backgroundColor: "#1153fa", // Change the hover background color
+                        },
+                        fontWeight: "bold",
+                      }}
+                      size="small"
+                      onClick={() => updateQuantity(cartItem, false)}
+                    >
+                      -
+                    </Button>
+                    <span className="border border-gray-400 inline-block w-8 text-center leading-8 mx-2">
+                      {cartItem.quantity}
+                    </span>
                     <Button
                       sx={{
                         color: "white",
@@ -164,26 +191,10 @@ const Cart = () => {
                     >
                       +
                     </Button>
-                    <span className="border border-gray-400 inline-block w-8 text-center leading-8 mx-2">
-                      {cartItem.quantity}
-                    </span>
-                    <Button
-                      sx={{
-                        color: "white",
-                        backgroundColor: "#1153fa",
-                        "&:hover": {
-                          backgroundColor: "#1153fa", // Change the hover background color
-                        },
-                        fontWeight: "bold",
-                      }}
-                      size="small"
-                      onClick={() => updateQuantity(cartItem, false)}
-                    >
-                      -
-                    </Button>
+                    
                   </div>
                 </div>
-                <div className="flex-1 ml-40">
+                <div className="flex-1 ml-30">
                   <div>
                     <span className="current-price font-semibold text-right">
                       MRP &#8377; {cartItem.book.price}
@@ -194,7 +205,7 @@ const Cart = () => {
                     sx={{
                       color: "#1153fa",
                       textTransform: "capitalize",
-                      marginTop: "100px",
+                      margin: "auto",
                     }}
                     onClick={() => removeItem(cartItem.id)}
                   >
@@ -206,6 +217,7 @@ const Cart = () => {
           );
         })}
       </div>
+
       <div className="flex-1">
         <Button
           variant="contained"

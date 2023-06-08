@@ -9,6 +9,8 @@ import { useAuthContext } from "../context/auth";
 
 import userService from "../service/user.service";
 import shared from "../utils/shared";
+import { FaHome } from 'react-icons/fa';
+
 function UpdateProfile() {
   const navigate = useNavigate();
   const authContext = useAuthContext();
@@ -68,6 +70,10 @@ function UpdateProfile() {
           color: "#bf0cf0",
         }}
       >
+         <FaHome
+    style={{ marginRight: "10px", cursor: "pointer" }}
+    onClick={() => navigate("/")}
+  />
         Update Profile
       </Typography>
       <div className="flex items-center justify-center m-6">
