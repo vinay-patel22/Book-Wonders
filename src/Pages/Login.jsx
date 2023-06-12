@@ -5,65 +5,81 @@ import {
   FormControl,
   Typography,
 } from "@mui/material";
-import React from "react";
-import {useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+// import { Link, useLocation, useNavigate } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
+
 import { TextField } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
 import { Formik } from "formik";
 import * as Yup from "yup";
 import authService from "../service/auth.service";
-import { toast, ToastContainer } from "react-toastify";
-import { useAuthContext } from "../context/auth";
+import { toast } from "react-toastify";
+
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../State/Slice/authSlice";
+import shared from "../utils/shared";
 
 function Login() {
   const navigate = useNavigate();
-  const authContext = useAuthContext();
+  const { pathname } = useLocation();
+
+  const authData = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const str = JSON.parse(localStorage.getItem("user"));
+    if (str?.id) {
+      dispatch(setUser(str));
+      navigate("/");
+    }
+    const access = shared.hasAccess(pathname, authData);
+    if (!access) {
+      toast.warning("sorry, you are not authorized to access this page");
+      navigate("/");
+      return;
+    }
+    // eslint-disable-next-line
+  }, []);
 
   const initialValues = {
     email: "",
     password: "",
   };
-
-  // Form validation schema using Yup
   const validate = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is Required"),
     password: Yup.string()
-      .min(5, "Password must be 5 characters minimum")
-      .required("Password is required"),
+      .min(5, "Password must be 5 charaters at minimum")
+      .required("Password must Required"),
   });
 
-  // Function called when the form is submitted
   const onSubmit = (values) => {
     authService
       .login(values)
       .then((res) => {
         delete res._id;
         delete res.__v;
-        authContext.setUser(res);
+        // authContext.setUser(res);
+        dispatch(setUser(res));
         navigate("/");
-        toast.success("Successfully logged in");
+        toast.success("successfully logged in");
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-  // Breadcrumbs for navigation
-  // Comment down by me
   const breadcrumbs = [
     // <Link to={"/"} underline="hover" key="1" color="inherit" href="/">
     //   Home
     // </Link>,
-    // <Typography key="2" color={{ color: "#bf0cf0" }}>
+
+    // <Typography key="2" color={{ color: "#f14d54" }}>
     //   Login
     // </Typography>,
   ];
-
   return (
-      <div className="flex-1">
-      <ToastContainer />
-
-      {/* Breadcrumbs */}
+    <div className="flex-1 ">
       <Breadcrumbs
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"
@@ -77,12 +93,10 @@ function Login() {
         {breadcrumbs}
       </Breadcrumbs>
 
-      {/* Title */}
       <Typography
         variant="h4"
         sx={{
           display: "flex",
-          // marginTop: "10px",
           alignItems: "center",
           justifyContent: "center",
           fontWeight: "bold",
@@ -91,20 +105,20 @@ function Login() {
       >
         Login or Create an Account
       </Typography>
-
-      {/* Divider */}
       <div className="flex items-center justify-center m-6">
-        <div className="border-t-2 border-[#0cf099] w-32"></div>
-      </div>
+      <div className="border-t-2 border-[#0cf099] w-32"></div>
 
-      {/* Grid layout for form */}
-      <div className="grid grid-cols-2 gap-36 mt-12">
-        {/* New Customer */}
+      </div>
+      <div className="grid grid-cols-2 gap-36 mt-12 ">
         <div className="ml-40">
           <Typography variant="h6">New Customer</Typography>
-          <Divider sx={{ marginTop: "20px" }} />
+          <Divider
+            sx={{
+              marginTop: "20px",
+            }}
+          />
           <Typography variant="body2" sx={{ marginTop: "20px" }}>
-            Registration is free and easy.
+            Registeration is free and easy.
           </Typography>
 
           <ul className="list-disc mt-5 ml-5">
@@ -112,15 +126,13 @@ function Login() {
             <li>Save Multiple shipping addresses</li>
             <li>View and track orders and more</li>
           </ul>
-
-          {/* Create an Account button */}
           <Button
             variant="contained"
             sx={{
               color: "white",
               backgroundColor: "#a40cf0",
               "&:hover": {
-                backgroundColor: "#a40cf0",
+                backgroundColor: "#a40cf0", // Change the hover background color
               },
               textTransform: "capitalize",
               marginTop: "165px",
@@ -132,10 +144,8 @@ function Login() {
             Create an Account
           </Button>
         </div>
-
-        {/* Registered Customers */}
         <div>
-          <Typography variant="h6">Registered Customers</Typography>
+          <Typography variant="h6">Ragistered Customers</Typography>
           <Divider
             sx={{
               marginTop: "20px",
@@ -143,10 +153,8 @@ function Login() {
             }}
           />
           <Typography variant="body2" sx={{ marginTop: "20px" }}>
-            If you have an account with us, please log in.
+            If you have account with us,please log in.
           </Typography>
-
-          {/* Form using Formik */}
           <Formik
             initialValues={initialValues}
             validationSchema={validate}
@@ -162,7 +170,6 @@ function Login() {
               isSubmitting,
             }) => (
               <form onSubmit={handleSubmit} className="">
-                {/* Email field */}
                 <FormControl fullWidth sx={{ marginTop: "20px" }}>
                   <label>Email Address*</label>
                   <TextField
@@ -178,8 +185,6 @@ function Login() {
                     {errors.email && touched.email && errors.email}
                   </div>
                 </FormControl>
-
-                {/* Password field */}
                 <FormControl fullWidth sx={{ marginTop: "40px" }}>
                   <label>Password*</label>
                   <TextField
@@ -195,8 +200,6 @@ function Login() {
                     {errors.password && touched.password && errors.password}
                   </div>
                 </FormControl>
-
-                {/* Submit button */}
                 <Button
                   variant="contained"
                   type="submit"
@@ -204,7 +207,7 @@ function Login() {
                     color: "white",
                     backgroundColor: "#a40cf0",
                     "&:hover": {
-                      backgroundColor: "#a40cf0",
+                      backgroundColor: "#a40cf0", // Change the hover background color
                     },
                     marginTop: "60px",
                   }}

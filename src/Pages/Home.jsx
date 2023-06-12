@@ -4,19 +4,22 @@ import React, { useMemo, useState } from "react";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { defaultFilter } from "../Constant/constant";
-import { useAuthContext } from "../context/auth";
-import { useCartContext } from "../context/cart";
 
 import bookService from "../service/book.service";
 import categoryService from "../service/category.service";
 import shared from "../utils/shared";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartData } from "../State/Slice/cartSlice";
 
 function Home() {
   const [filters, setFilters] = useState(defaultFilter);
   const [categories, setCategories] = useState([]);
   const [sortBy, setSortBy] = useState();
-  const authContext = useAuthContext();
-  const cartContext = useCartContext();
+  // const authContext = useAuthContext();
+  // const cartContext = useCartContext();
+  const authData = useSelector((state) => state.auth.user);
+
+  const dispatch = useDispatch();
   const [bookResponse, setBookResponse] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -24,10 +27,6 @@ function Home() {
     items: [],
     totalItems: 0,
   });
-
-  useEffect(() => {
-    getAllCategories();
-  }, []);
 
   const searchAllBooks = (filters) => {
     bookService.getAll(filters).then((res) => {
@@ -50,7 +49,9 @@ function Home() {
       }
     });
   };
-
+  useEffect(() => {
+    getAllCategories();
+  }, []);
   const books = useMemo(() => {
     const bookList = [...bookResponse.items];
     if (bookList) {
@@ -78,13 +79,14 @@ function Home() {
 
   const addToCart = (book) => {
     shared
-      .addToCart(book, authContext.user.id)
+      .addToCart(book, authData.id)
       .then((res) => {
         if (res.error) {
           toast.error(res.message);
         } else {
-          cartContext.updateCart();
           toast.success(res.message);
+          dispatch(fetchCartData(authData.id));
+          // dispatch(addtoCart(book)); // Dispatch the addToCart action
         }
       })
       .catch((err) => {
@@ -102,13 +104,14 @@ function Home() {
           alignItems: "center",
           justifyContent: "center",
           fontWeight: "bold",
-          color: "#bf0cf0",
+          color: "bf0cf0",
         }}
       >
         Book Listing
       </Typography>
       <div className="flex items-center justify-center m-6">
       <div className="border-t-2 border-[#0cf099] w-32"></div>
+
       </div>
       <div className="flex justify-between items-center ">
       <Typography variant="h6" sx={{
@@ -122,6 +125,7 @@ function Home() {
           Total - {bookResponse.totalItems} items
         </Typography>
         <div className="flex items-center space-x-5">
+
           <TextField
             name="text"
             placeholder="Search..."
@@ -157,11 +161,8 @@ function Home() {
               Sort By
             </Typography>
 
-            {/* <select onChange={sortBook} value={sortBy}>
-              <option value="a-z">a - z</option>
-              <option value="z-a">z - a</option>
-            </select> */}
-          <Typography variant="subtitle1" 
+
+            <Typography variant="subtitle1" 
              sx={{
               marginTop: "25px",
               display: "flex",
@@ -176,7 +177,6 @@ function Home() {
               <option value="z-a">z - a</option>
             </select>
             </Typography>
-
           </div>
         </div>
       </div>
@@ -186,7 +186,7 @@ function Home() {
           <div
           className="rounded-s-lg shadow-xl flex flex-col space-y-4 border-red"
           key={index}
-          >
+          > 
             <div className="w-full h-56 overflow-hidden rounded-lg">
               <img
                 src={book.base64image}

@@ -15,13 +15,15 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmationDialog from "../../Components/ConfirmationDialog";
 import { defaultFilter, RecordsPerPage } from "../../Constant/constant";
-import { useAuthContext } from "../../context/auth";
+
 import userService from "../../service/user.service";
 import shared from "../../utils/shared";
+import { useSelector } from "react-redux";
 
 function User() {
   const navigate = useNavigate();
-  const authContext = useAuthContext();
+
+  const authData = useSelector((state) => state.auth.user);
 
   const [filters, setFilters] = useState(defaultFilter);
   const [open, setOpen] = useState(false);
@@ -70,9 +72,8 @@ function User() {
       });
   };
   return (
-    <div className="flex-1 ml-40 mr-40 ">
-
-      <Typography
+    <div className="flex-1 ml-40 mr-40">
+       <Typography
         variant="h4"
         sx={{
           marginTop: "25px",
@@ -153,27 +154,27 @@ function User() {
                     >
                       Edit
                     </Button>
-                    {row.id !== authContext.user.id && (
+                    {row.id !== authData.id && (
                       <Button
-                        variant="outlined"
-                        disableElevation
-                        sx={{
-                          borderColor: "#fa1115",
-                          "&:hover": {
-                            backgroundColor: "#fa1115", // Change the hover background color
-                            color: "white",
-                          },
-                          textTransform: "capitalize",
-                          width: "90px",
-                          color: "#fa1115",
-                        }}
-                        onClick={() => {
-                          setOpen(true);
-                          setSelectedId(row.id ?? 0);
-                        }}
-                      >
-                        Delete
-                      </Button>
+                      variant="outlined"
+                      disableElevation
+                      sx={{
+                        borderColor: "#fa1115",
+                        "&:hover": {
+                          backgroundColor: "#fa1115", // Change the hover background color
+                          color: "white",
+                        },
+                        textTransform: "capitalize",
+                        width: "90px",
+                        color: "#fa1115",
+                      }}
+                      onClick={() => {
+                        setOpen(true);
+                        setSelectedId(row.id ?? 0);
+                      }}
+                    >
+                      Delete
+                    </Button>
                     )}
                   </TableCell>
                 </TableRow>
