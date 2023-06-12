@@ -307,7 +307,7 @@ const Cart = () => {
               color: "white",
               backgroundColor: "#fa1115",
               "&:hover": {
-                backgroundColor: "#fa1115", // Change the hover background color
+                backgroundColor: "#fa1115", 
               },
               marginTop: "50px",
               textTransform: "capitalize",
