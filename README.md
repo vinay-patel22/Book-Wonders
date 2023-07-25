@@ -2,7 +2,7 @@
 
 **THIS IS MY FIRST REACT JS BOOK STORE project , so changes are welcome :)**
 
-During my internship period, I had the opportunity to work on an exciting project. This project allowed me to apply my skills and knowledge in a practical setting, gaining valuable hands-on experience in a professional environment.
+During my internship period in @TatvaSoft, I had the opportunity to work on an exciting project. This project allowed me to apply my skills and knowledge in a practical setting, gaining valuable hands-on experience in a professional environment.
 
 📚 This is a Book Store web application built with ReactJS. It provides a user-friendly interface for browsing and purchasing books online. The application allows users to search for books, view book details, add books to their cart, and proceed with the checkout process.
 
